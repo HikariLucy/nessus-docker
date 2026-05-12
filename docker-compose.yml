@@ -1,0 +1,30 @@
+services:
+  nessus:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nessus-scanner
+    restart: unless-stopped
+    ports:
+      - "8834:8834"
+    volumes:
+      # 1. Named Volume: Para los datos críticos (plugins, base de datos)
+      - nessus_data:/opt/nessus
+      # 2. Bind Mount: Para los logs accesibles desde tu Windows/Host
+      - ./logs:/opt/nessus/var/nessus/logs
+    environment:
+      - TZ=America/Santiago
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          memory: 512M
+
+volumes:
+  nessus_data:
+    driver: local
+    labels:
+      com.iny1105.description: "Datos persistentes de Nessus"
+      com.iny1105.owner: "Jesus"
