@@ -1,30 +1,22 @@
 services:
-  nessus:
+  prometheus:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nessus-scanner
+    container_name: prometheus-healthtrack
     restart: unless-stopped
     ports:
-      - "8834:8834"
+      - "9090:9090"
     volumes:
-      # 1. Named Volume: Para los datos críticos (plugins, base de datos)
-      - nessus_data:/opt/nessus
-      # 2. Bind Mount: Para los logs accesibles desde tu Windows/Host
-      - ./logs:/opt/nessus/var/nessus/logs
+      # Named Volume para persistir los datos de métricas (/prometheus)
+      - prometheus_data:/prometheus
+      # Bind Mount para montar la configuración desde el host
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
     environment:
       - TZ=America/Santiago
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 2G
-        reservations:
-          memory: 512M
+      # Variable de entorno APP_ENV con valor "production"
+      - APP_ENV=production
 
+# Declara el named volume prometheus_data a nivel raíz
 volumes:
-  nessus_data:
-    driver: local
-    labels:
-      com.iny1105.description: "Datos persistentes de Nessus"
-      com.iny1105.owner: "Jesus"
+  prometheus_data:
