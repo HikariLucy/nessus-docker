@@ -1,5 +1,17 @@
-logs/
+# Base de datos SQLite
+hogar.db
+
+# Credenciales y secretos locales
+.api_key
 .env
-*.tar
-.DS_Store
-Thumbs.db
+.secrets.toml
+.streamlit/secrets.toml
+
+# Python caché y entornos virtuales
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
